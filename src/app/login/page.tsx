@@ -12,11 +12,11 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {ThemeProvider } from '@mui/material/styles';
 import theme from '@/theme';
 import { signInWithEmailAndPassword} from "firebase/auth";
-import { auth, provider } from "lib/firebase-config";
-import { redirect } from 'next/navigation';
+import { auth} from "lib/firebase-config";
+
 import { useRouter } from 'next/navigation'
 function Copyright(props: any) {
   return (

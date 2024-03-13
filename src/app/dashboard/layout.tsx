@@ -27,7 +27,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
-            <Navigator/>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
             <Container maxWidth="lg">

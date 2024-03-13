@@ -43,62 +43,62 @@ const categories = [
             {
                 id: 'Clientes',
                 icon: <PeopleIcon />,
-                link: '/administracao/clientes',
+                link: '/dashboard/administracao/clientes',
                 active: true,
             },
-            { id: 'Fornecedores', icon: <AttachmentIcon />, link: '/administracao/fornecedores' },
-            { id: 'Funcionários', icon: <BadgeIcon />, link: '/administracao/funcionarios' },
-            { id: 'Contatos', icon: <ContactsIcon />, link: '/administracao/contatos' },
-            { id: 'Comunicação Interna', icon: <CampaignIcon />, link: '/administracao/comunicacaointerna' },
-            { id: 'Relatórios', icon: <AssessmentIcon />, link: '/administracao/relatorios' }
+            { id: 'Fornecedores', icon: <AttachmentIcon />, link: '/dashboard/administracao/fornecedores' },
+            { id: 'Funcionários', icon: <BadgeIcon />, link: '/dashboard/administracao/funcionarios' },
+            { id: 'Contatos', icon: <ContactsIcon />, link: '/dashboard/administracao/contatos' },
+            { id: 'Comunicação Interna', icon: <CampaignIcon />, link: '/dashboard/administracao/comunicacaointerna' },
+            { id: 'Relatórios', icon: <AssessmentIcon />, link: '/dashboard/administracao/relatorios' }
         ],
     },
     {
         id: 'Financeiro',
         children: [
-            { id: 'Contas', icon: <RequestQuoteIcon />, link: '/financeiro/contas' },
-            { id: 'Fluxo de caixa', icon: <SavingsIcon />, link: '/financeiro/fluxiodecaixa' },
+            { id: 'Contas', icon: <RequestQuoteIcon />, link: '/dashboard/financeiro/contas' },
+            { id: 'Fluxo de caixa', icon: <SavingsIcon />, link: '/dashboard/financeiro/fluxiodecaixa' },
 
-            { id: 'Análise de crédito', icon: <PlagiarismIcon />, link: '/financeiro/analisedecredito' },
-            { id: 'Centros de custos', icon: <StorefrontIcon />, link: '/financeiro/centrosdecustos' },
-            { id: 'Consulta serasa', icon: <PolicyIcon />, link: '/financeiro/consultaserasa' },
-            { id: 'Relatórios', icon: <AssessmentIcon />, link: '/financeiro/relatorios' },
+            { id: 'Análise de crédito', icon: <PlagiarismIcon />, link: '/dashboard/financeiro/analisedecredito' },
+            { id: 'Centros de custos', icon: <StorefrontIcon />, link: '/dashboard/financeiro/centrosdecustos' },
+            { id: 'Consulta serasa', icon: <PolicyIcon />, link: '/dashboard/financeiro/consultaserasa' },
+            { id: 'Relatórios', icon: <AssessmentIcon />, link: '/dashboard/financeiro/relatorios' },
         ],
     },
     {
         id: 'Logística',
         children: [
-            { id: 'Cargas', icon: <LocalShippingIcon />, link: '/logistica/cargas' },
-            { id: 'Motoristas', icon: <PersonIcon />, link: '/logistica/motoristas' },
-            { id: 'Viajem', icon: <RvHookupIcon />, link: '/logistica/viajem' },
-            { id: 'Frota', icon: <GarageIcon />, link: '/logistica/frota' },
-            { id: 'Relatórios', icon: <AssessmentIcon />, link: '/logistica/relatorios' },
+            { id: 'Cargas', icon: <LocalShippingIcon />, link: '/dashboard/logistica/cargas' },
+            { id: 'Motoristas', icon: <PersonIcon />, link: '/dashboard/logistica/motoristas' },
+            { id: 'Viajem', icon: <RvHookupIcon />, link: '/dashboard/logistica/viajem' },
+            { id: 'Frota', icon: <GarageIcon />, link: '/dashboard/logistica/frota' },
+            { id: 'Relatórios', icon: <AssessmentIcon />, link: '/dashboard/logistica/relatorios' },
 
         ],
     },
     {
         id: 'Estoque',
         children: [
-            { id: 'Wherehouses', icon: <WarehouseIcon />, link: '/estoque/wherehouses' },
-            { id: 'Produtos', icon: <QrCodeIcon />, link: '/estoque/produtos' },
-            { id: 'Almoxarifado', icon: <InventoryIcon />, link: '/estoque/almoxarifado' },
-            { id: 'Relatórios', icon: <PhonelinkSetupIcon />, link: '/estoque/relatorios' },
+            { id: 'Wherehouses', icon: <WarehouseIcon />, link: '/dashboard/estoque/wherehouses' },
+            { id: 'Produtos', icon: <QrCodeIcon />, link: '/dashboard/estoque/produtos' },
+            { id: 'Almoxarifado', icon: <InventoryIcon />, link: '/dashboard/estoque/almoxarifado' },
+            { id: 'Relatórios', icon: <PhonelinkSetupIcon />, link: '/dashboard/estoque/relatorios' },
 
         ],
     },
     {
         id: 'Planejamentos e Controle',
         children: [
-            { id: 'Produção', icon: <PrecisionManufacturingIcon />, link: '/planejamentoecontrole/producao' },
-            { id: 'Saída de produtos', icon: <ArrowOutwardIcon />, link: '/planejamentoecontrole/saidadeprodutos' },
+            { id: 'Produção', icon: <PrecisionManufacturingIcon />, link: '/dashboard/planejamentoecontrole/producao' },
+            { id: 'Saída de produtos', icon: <ArrowOutwardIcon />, link: '/dashboard/planejamentoecontrole/saidadeprodutos' },
         ],
     },
     {
         id: 'Faturamento',
         children: [
-            { id: 'Compras', icon: <ShoppingCartIcon />, link: '/faturamento/compras' },
-            { id: 'Vendas', icon: <SellIcon />, link: '/faturamento/vendas' },
-            { id: 'Rendimentos', icon: <MonetizationOnIcon />, link: '/faturamento/rendimentos' }
+            { id: 'Compras', icon: <ShoppingCartIcon />, link: '/dashboard/faturamento/compras' },
+            { id: 'Vendas', icon: <SellIcon />, link: '/dashboard/faturamento/vendas' },
+            { id: 'Rendimentos', icon: <MonetizationOnIcon />, link: '/dashboard/faturamento/rendimentos' }
         ],
     },
 ];
@@ -139,12 +139,14 @@ export default function Navigator(props: DrawerProps) {
                     />
 
                 </ListItem>
+                <Link style={{ textDecoration: 'none' }} href={'/'}>
                 <ListItem sx={{ ...item, ...itemCategory }}>
                     <ListItemIcon>
                         <HomeIcon />
                     </ListItemIcon>
                     <ListItemText>Inicio</ListItemText>
                 </ListItem>
+                </Link>
                 {categories.map(({ id, children }) => (
                     <Box key={id} sx={{ bgcolor: '#122708' }}>
                         <ListItem sx={{ py: 2, px: 3 }}>

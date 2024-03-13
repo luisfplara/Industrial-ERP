@@ -57,7 +57,7 @@ export default function Projetos() {
             Adicionar Projeto
           </Button>
         </Link>
-        <AddClienteDialog/>
+  
       </Box>
       <Grid container
         mt={2}

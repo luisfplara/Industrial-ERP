@@ -36,6 +36,7 @@ function Copyright(props: any) {
 
 
 export default function SignIn() {
+  const router = useRouter()
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -43,7 +44,22 @@ export default function SignIn() {
     const password = data.get('password')?.toString()
     
     if (email != null && password!= null) {
-      createUserWithEmailAndPassword(auth, email, password);
+      createUserWithEmailAndPassword(auth, email, password).then(async (userCred) => {
+        if (!userCred) {
+          return;
+        }
+  
+       await fetch("/api/login", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${await userCred.user.getIdToken()}`,
+          },
+        }).then((response) => {
+          if (response.status === 200) {
+            router.push("/dashboard/home");
+          }
+        });
+      });
     }
 
     console.log({

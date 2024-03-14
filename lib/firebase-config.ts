@@ -1,15 +1,7 @@
 import { initializeApp, getApps, getApp  } from "firebase/app";
 import { GoogleAuthProvider,getAuth } from "firebase/auth";
 import  {getFirestore} from "firebase/firestore";
-const firebaseConfig = {
-  apiKey: 'AIzaSyC2HSA34Vpayk3gqq5VBUJTJk0JtxHozw8',
-  authDomain: 'turbodev-c6c9c.firebaseapp.com',
-  projectId: 'turbodev-c6c9c',
-  storageBucket: 'turbodev-c6c9c.appspot.com',
-  messagingSenderId: '596645095317',
-  appId: '1:596645095317:web:01d1030dc902019d1e389c',
-  measurementId: 'G-6J69VGMJTK'
-}
+const firebaseConfig = { apiKey: "AIzaSyAajbckN86uioXVxZ4jDizWs-gybbIv9B8", authDomain: "polvilho-tres-coqueiros-erp.firebaseapp.com", projectId: "polvilho-tres-coqueiros-erp", storageBucket: "polvilho-tres-coqueiros-erp.appspot.com", messagingSenderId: "711465347696", appId: "1:711465347696:web:cd16b4f2d237f97ed562b5", measurementId: "G-Z1QJ96RC6C" }
 
 
   //console.log(firebaseConfig)

@@ -10,8 +10,11 @@ export async function POST(request: NextRequest, response: NextResponse) {
   const authorization = headers().get("Authorization");
   if (authorization?.startsWith("Bearer ")) {
     const idToken = authorization.split("Bearer ")[1];
-    const decodedToken = await auth().verifyIdToken(idToken);
-
+    console.log('hahaha', idToken)
+    const decodedToken = await auth().verifyIdToken(idToken).catch((data)=>{
+      console.log('errrorrrr', data)
+    });
+    console.log('hihihi', idToken)
     if (decodedToken) {
       //Generate session cookie
       const expiresIn = 60 * 60 * 24 * 5 * 1000;

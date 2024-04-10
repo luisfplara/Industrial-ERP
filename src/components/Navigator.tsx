@@ -34,8 +34,9 @@ import SellIcon from '@mui/icons-material/Sell';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Image } from '@mui/icons-material';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-
+/*
 const categories = [
     {
         id: 'Administração',
@@ -102,6 +103,27 @@ const categories = [
         ],
     },
 ];
+*/
+
+const categories = [
+    {
+        id: 'Administração',
+        children: [
+            {
+                id: 'Clientes',
+                icon: <PeopleIcon />,
+                link: '/dashboard/administracao/clientes',
+            },
+            { id: 'Estoque', icon: <WarehouseIcon />, link: '/dashboard/administracao/estoque' },
+            { id: 'Processamento', icon: <PrecisionManufacturingIcon />, link: '/dashboard/administracao/processamento' },
+            { id: 'Produtos', icon: <BadgeIcon />, link: '/dashboard/administracao/produtos' },
+            { id: 'Matéria Prima', icon: <PrecisionManufacturingIcon />, link: '/dashboard/administracao/materiaprima' },
+            { id: 'Vendas', icon: <MonetizationOnIcon />, link: '/dashboard/administracao/vendas' },
+
+        ],
+    },
+];
+
 
 const item = {
     py: '2px',
@@ -120,17 +142,18 @@ const itemCategory = {
 
 export default function Navigator(props: DrawerProps) {
     const { ...other } = props;
+    const pathname = usePathname()
+
 
     return (
         <Drawer variant="permanent" {...other}>
             <List disablePadding>
                 <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
-
                     <Box
                         component="img"
                         sx={{
-                            height: 180,
-                            width: 180,
+                            height: 120,
+                            width: 200,
                             maxHeight: { xs: 233, md: 167 },
                             maxWidth: { xs: 350, md: 250 },
                         }}
@@ -140,23 +163,24 @@ export default function Navigator(props: DrawerProps) {
 
                 </ListItem>
                 <Link style={{ textDecoration: 'none' }} href={'/'}>
-                <ListItem sx={{ ...item, ...itemCategory }}>
-                    <ListItemIcon>
-                        <HomeIcon />
-                    </ListItemIcon>
-                    <ListItemText>Inicio</ListItemText>
-                </ListItem>
+              
+                <ListItemButton selected={pathname=='/dashboard/home'} sx={{ ...item, ...itemCategory }}>
+                        <ListItemIcon>
+                            <HomeIcon />
+                        </ListItemIcon>
+                        <ListItemText>Home</ListItemText>
+                    </ListItemButton>
                 </Link>
                 {categories.map(({ id, children }) => (
                     <Box key={id} sx={{ bgcolor: '#122708' }}>
                         <ListItem sx={{ py: 2, px: 3 }}>
                             <ListItemText sx={{ color: '#fff' }}>{id}</ListItemText>
                         </ListItem>
-                        {children.map(({ id: childId, icon, link, active }) => (
-                            <Link style={{ textDecoration: 'none' }} href={link||'/'}>
-                                <ListItem disablePadding key={childId}>
+                        {children.map(({ id: childId, icon, link }) => (
+                            <Link key={childId} style={{ textDecoration: 'none' }} href={link||'/'}>
+                                <ListItem disablePadding >
 
-                                    <ListItemButton selected={active} sx={item}>
+                                    <ListItemButton selected={link==pathname} sx={item}>
                                         <ListItemIcon>{icon}</ListItemIcon>
                                         <ListItemText>{childId}</ListItemText>
                                     </ListItemButton>

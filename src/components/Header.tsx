@@ -13,6 +13,7 @@ import Tabs from '@mui/material/Tabs';
 import Toolbar from '@mui/material/Toolbar';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
+import ProfileHeader from './ProfileHeader';
 
 const lightColor = 'rgba(255, 255, 255, 0.7)';
 
@@ -62,9 +63,7 @@ export default function Header(props: HeaderProps) {
               </Tooltip>
             </Grid>
             <Grid item>
-              <IconButton color="inherit" sx={{ p: 0.5 }}>
-                <Avatar src="/static/images/avatar/1.jpg" alt="My Avatar" />
-              </IconButton>
+              <ProfileHeader/>
             </Grid>
           </Grid>
         </Toolbar>

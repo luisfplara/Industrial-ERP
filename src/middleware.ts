@@ -9,12 +9,12 @@ export async function middleware(request: NextRequest, response: NextResponse) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  const responseAPI = await fetch("http://localhost:3000/api/login", {
+  const responseAPI = await fetch(process.env.BASE_URL+ "/api/login", {
     headers: {
       Cookie: `session=${session?.value}`,
     },
   });
-
+ console.log('responseAPIresponseAPI', responseAPI.body)
   if (responseAPI.status !== 200) {
     return NextResponse.redirect(new URL("/login", request.url));
   }else{

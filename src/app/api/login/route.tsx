@@ -14,7 +14,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
     const decodedToken = await auth().verifyIdToken(idToken).catch((data)=>{
       console.log('errrorrrr', data)
     });
-    console.log('hihihi', idToken)
+    console.log('hihihi', decodedToken)
     if (decodedToken) {
       //Generate session cookie
       const expiresIn = 60 * 60 * 24 * 5 * 1000;

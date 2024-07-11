@@ -1,40 +1,28 @@
-'use client'
 import * as React from 'react';
-import theme from '@/theme';
+import type { Viewport } from 'next';
 
-import { Link, Typography, useMediaQuery } from '@mui/material';
+import '@/styles/global.css';
 
-const drawerWidth = 256;
+import { UserProvider } from '@/contexts/user-context';
+import { LocalizationProvider } from '@/components/core/localization-provider';
+import { ThemeProvider } from '@/components/core/theme-provider/theme-provider';
 
+export const viewport = { width: 'device-width', initialScale: 1 } satisfies Viewport;
 
+interface LayoutProps {
+  children: React.ReactNode;
+}
 
-export default function RootLayout(props: { children: React.ReactNode }) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-
+export default function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <html lang="en">
       <body>
-          {props.children}
+        <LocalizationProvider>
+          <UserProvider>
+            <ThemeProvider>{children}</ThemeProvider>
+          </UserProvider>
+        </LocalizationProvider>
       </body>
     </html>
-  );
-}
-
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}.
-    </Typography>
   );
 }

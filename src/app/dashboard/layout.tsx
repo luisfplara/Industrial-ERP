@@ -1,79 +1,50 @@
-'use client'
 import * as React from 'react';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import theme from '@/theme';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import GlobalStyles from '@mui/material/GlobalStyles';
 
-import { Box, Container, Link, Typography, useMediaQuery } from '@mui/material';
-import Navigator from '@/components/Navigator';
+import { AuthGuard } from '@/components/auth/auth-guard';
+import { MainNav } from '@/components/dashboard/layout/main-nav';
+import { SideNav } from '@/components/dashboard/layout/side-nav';
 
-import Header from '@/components/Header';
-
-const drawerWidth = 256;
-
-
-
-export default function RootLayout(props: { children: React.ReactNode }) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
-
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-
-  return (
-
-    <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-  
-        <Box sx={{ display: 'flex', minHeight: '100vh'}} >
-          <CssBaseline />
-          <Box
-            component="nav"
-            sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-          >
-            {isSmUp ? null : (
-              <Navigator
-                PaperProps={{ style: { width: drawerWidth } }}
-                variant="temporary"
-                open={mobileOpen}
-                onClose={handleDrawerToggle}
-              />
-            )}
-            <Navigator
-              PaperProps={{ style: { width: drawerWidth } }}
-              sx={{ display: { sm: 'block', xs: 'none' } }}
-            />
-          </Box>
-          <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', backgroundColor:'red'  }}>
-            <Header onDrawerToggle={handleDrawerToggle} />
-            <Box component="main" sx={{ flex: 1, minHeight: '100vh', py: 2, px: 4, bgcolor: '#eaeff1' }}>
-              {props.children}
-            </Box>
-
-          </Box>
-        </Box>
-
-
-
-      </ThemeProvider>
-    </AppRouterCacheProvider>
-
-  );
+interface LayoutProps {
+  children: React.ReactNode;
 }
 
-
-function Copyright() {
+export default function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}.
-    </Typography>
+    <AuthGuard>
+      <GlobalStyles
+        styles={{
+          body: {
+            '--MainNav-height': '56px',
+            '--MainNav-zIndex': 1000,
+            '--SideNav-width': '280px',
+            '--SideNav-zIndex': 1100,
+            '--MobileNav-width': '320px',
+            '--MobileNav-zIndex': 1100,
+          },
+        }}
+      />
+      <Box
+        sx={{
+          bgcolor: 'var(--mui-palette-background-default)',
+          display: 'flex',
+          flexDirection: 'column',
+          position: 'relative',
+          minHeight: '100%',
+        }}
+      >
+        <SideNav />
+        <Box sx={{ display: 'flex', flex: '1 1 auto', flexDirection: 'column', pl: { lg: 'var(--SideNav-width)' } }}>
+          <MainNav />
+          <main>
+            <Container maxWidth="xl" sx={{ py: '64px' }}>
+              {children}
+            </Container>
+          </main>
+        </Box>
+      </Box>
+    </AuthGuard>
   );
 }

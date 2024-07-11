@@ -27,13 +27,13 @@ export default async function Produtos() {
 
   return (
     <Container >
-      <React.Suspense>
+
       <AddProdutosDialog submitAction={addProdutoForm} />
       <DeleteDOCDialog deleteAction={deleteProdutoForm}/>
       <Grid>
         <ProdutosTable produtoList={produtosList}/>
       </Grid>
-      </React.Suspense>
+   
     </Container >
   );
 }

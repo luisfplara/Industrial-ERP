@@ -25,10 +25,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 
   return (
 
-    <AppRouterCacheProvider options={{ enableCssLayer: true }}>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-  
+ 
         <Box sx={{ display: 'flex', minHeight: '100vh'}} >
           <CssBaseline />
           <Box
@@ -59,21 +56,6 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 
 
 
-      </ThemeProvider>
-    </AppRouterCacheProvider>
-
   );
 }
 
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}.
-    </Typography>
-  );
-}

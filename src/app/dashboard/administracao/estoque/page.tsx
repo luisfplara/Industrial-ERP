@@ -34,13 +34,13 @@ export default async function Clientes() {
 
   return (
     <Box >
-      <React.Suspense>
+    
       <AddEstoqueDialog submitAction={addEstoqueForm} />
       <DeleteDOCDialog deleteAction={deleteEstoqueForm} />
       <Grid>
         <EstoqueGrid estoqueList={estoqueList}/>
       </Grid>
-      </React.Suspense>
+     
     </Box >
   );
 }

@@ -2,7 +2,7 @@
 import { Box, Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Stack, TextField } from "@mui/material";
 import * as React from 'react';
 import { ProdutoType, addProduto, getProdutos } from "@/models/produto";
-import { useSearchParams } from "next/navigation";
+
 import { useRouter } from "next/navigation";
 import { ClienteType, getClientes } from "@/models/cliente";
 import ProdutosTable, { ProdutoTableData } from "@/components/tablesViews/produtosTable";

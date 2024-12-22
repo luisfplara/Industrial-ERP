@@ -1,4 +1,4 @@
-/* eslint-disable no-console -- asd*/
+ 
 'use client';
 
 import * as React from 'react';
@@ -24,13 +24,11 @@ import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
 
 const schema = zod.object({
-  email: zod.string().min(1, { message: 'Email is required' }).email(),
-  password: zod.string().min(1, { message: 'Password is required' }),
+  email: zod.string().min(1, { message: "Email é necessário" }).email(),
+  password: zod.string().min(1, { message: 'Senha é necessária' }),
 });
 
 type Values = zod.infer<typeof schema>;
-
-const defaultValues = { email: 'sofia@devias.io', password: 'Secret1' } satisfies Values;
 
 export function SignInForm(): React.JSX.Element {
   const router = useRouter();
@@ -46,28 +44,23 @@ export function SignInForm(): React.JSX.Element {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<Values>({ defaultValues, resolver: zodResolver(schema) });
+  } = useForm<Values>({ resolver: zodResolver(schema) });
 
   const onSubmit = React.useCallback(
     async (values: Values): Promise<void> => {
-      setIsPending(true);
 
-      const aux = await authClient.signInWithPassword(values);
-            console.log("aux", aux)
-      if (aux.error) {
-        setError('root', { type: 'server', message: aux.error });
+      setIsPending(true);    
+      const auth = await authClient.signInWithPassword(values);
+
+      if(auth.error){
+        setError('root', { type: 'server', message: auth.error.message});
         setIsPending(false);
         return;
-      }
+      } 
 
-      // Refresh the auth state
-      const session  = await checkSession?.();
-console.log('sessionsession-> ',session);
-      // UserProvider, for this case, will not refresh the router
-      // After refresh, GuestGuard will handle the redirect
-      router.refresh();
-
-      console.log('refreshrefresh ');
+      location.reload();
+   
+      setIsPending(false);
     },
     [checkSession, router, setError]
   );
@@ -75,11 +68,11 @@ console.log('sessionsession-> ',session);
   return (
     <Stack spacing={4}>
       <Stack spacing={1}>
-        <Typography variant="h4">Sign in</Typography>
+        <Typography variant="h4">Entrar</Typography>
         <Typography color="text.secondary" variant="body2">
-          Don&apos;t have an account?{' '}
+          Não possui uma conta?{' '}
           <Link component={RouterLink} href={paths.auth.signUp} underline="hover" variant="subtitle2">
-            Sign up
+            Criar Conta
           </Link>
         </Typography>
       </Stack>
@@ -90,7 +83,7 @@ console.log('sessionsession-> ',session);
             name="email"
             render={({ field }) => (
               <FormControl error={Boolean(errors.email)}>
-                <InputLabel>Email address</InputLabel>
+                <InputLabel>Email</InputLabel>
                 <OutlinedInput {...field} label="Email address" type="email" />
                 {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
               </FormControl>
@@ -101,9 +94,8 @@ console.log('sessionsession-> ',session);
             name="password"
             render={({ field }) => (
               <FormControl error={Boolean(errors.password)}>
-                <InputLabel>Password</InputLabel>
-                <OutlinedInput
-                  {...field}
+                <InputLabel>Senha</InputLabel>
+                <OutlinedInput {...field}
                   endAdornment={
                     showPassword ? (
                       <EyeIcon
@@ -132,25 +124,15 @@ console.log('sessionsession-> ',session);
           />
           <div>
             <Link component={RouterLink} href={paths.auth.resetPassword} variant="subtitle2">
-              Forgot password?
+              Esqueceu a senha?
             </Link>
           </div>
           {errors.root ? <Alert color="error">{errors.root.message}</Alert> : null}
           <Button disabled={isPending} type="submit" variant="contained">
-            Sign in
+            Entrar
           </Button>
         </Stack>
       </form>
-      <Alert color="warning">
-        Use{' '}
-        <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          sofia@devias.io
-        </Typography>{' '}
-        with password{' '}
-        <Typography component="span" sx={{ fontWeight: 700 }} variant="inherit">
-          Secret1
-        </Typography>
-      </Alert>
     </Stack>
   );
 }

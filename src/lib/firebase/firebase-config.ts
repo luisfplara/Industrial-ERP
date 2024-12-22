@@ -1,10 +1,10 @@
 /* eslint-disable eslint-comments/require-description -- If you use directive comments, you should explain why you use them.*/
 
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+ 
+ 
+ 
 
-import { initializeApp, getApps, getApp, FirebaseOptions  } from "firebase/app";
+import { initializeApp, getApps, getApp, type FirebaseOptions  } from "firebase/app";
 import { GoogleAuthProvider,getAuth } from "firebase/auth";
 import  {getFirestore} from "firebase/firestore";
 

@@ -2,8 +2,8 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import * as React from 'react';
 
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useSearchParams , useRouter } from "next/navigation";
+
 
 
 

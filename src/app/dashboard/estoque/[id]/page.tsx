@@ -1,18 +1,16 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { LinearProgress, LinearProgressProps, Stack, Typography } from '@mui/material';
-import { LineChart } from '@mui/x-charts';
-import ProdutosTable from '@/components/tablesViews/produtosTable';
-import { ProdutoType, getOneProduto, getProdutos } from '@/data/produto';
+import { LinearProgress, type LinearProgressProps, Stack, Typography } from '@mui/material';
+
+import { type ProdutoType, getOneProduto, getProdutos } from '@/data/produto';
 import CardItem from '@/components/dashboard/dashbaord-carditem';
 import { CapacidadeEstoqueChart, EstradaESaidaEstoqueChart } from '@/components/dashboard/estoque/estoque-charts';
-import { deleteProdutoEstoque, getEstoques, getOneEstoqueWithId, getProdutosEstoque, getProdutosFromEstoque } from '@/data/estoque';
-import DataManupulationHeader from '@/components/DataManupulationHeader';
-import Link from 'next/link';
-import AddIcon from '@mui/icons-material/Add';
-import ProdutosEstoqueTable, { ProdutoEstoqueData } from '@/components/dashboard/estoque/estoque-tabela-produto';
-import AddEstoqueDialog from '@/components/dialogs/AddEstoqueDialog';
+import { getOneEstoqueWithId, getProdutosFromEstoque } from '@/data/estoque';
+
+
+import ProdutosEstoqueTable, { type ProdutoEstoqueData } from '@/components/dashboard/estoque/estoque-tabela-produto';
+
 import { addProdutoEstoqueForm, deleteProdutoEstoqueForm } from './actions';
 import AddProdutoEstoqueDialog from '@/components/dashboard/estoque/estoque-produto-adicionar';
 
@@ -43,12 +41,12 @@ export default async function BasicGrid({ params }: { params: { id: string } }) 
     const produtosEstoque = await getProdutosFromEstoque(params.id)
     const produtosData = await getProdutos();
 
-    const produtosList: Array<{ docId: string } & ProdutoType> = []
-    const produtosEstoqueList: Array<ProdutoEstoqueData> = []
+    const produtosList: ({ docId: string } & ProdutoType)[] = []
+    const produtosEstoqueList: ProdutoEstoqueData[] = []
 
-    var quantidadeDeProdutos: number = 0;
-    var volumeDeProdutos: number = 0;
-    var valorTotalProdutos: number = 0
+    let quantidadeDeProdutos = 0;
+    let volumeDeProdutos = 0;
+    let valorTotalProdutos = 0
     produtosData.docs.forEach((data) => {
         produtosList.push({ docId: data.id, ...data.data() });
     })
@@ -67,9 +65,9 @@ export default async function BasicGrid({ params }: { params: { id: string } }) 
             volumeUn: produto.data()?.volume || 0,
             volumeOcupado: produtoEstoque.data().quantidade * (produto.data()?.volume || 0)
         }
-        valorTotalProdutos += +produtoEstoque.data().quantidade * (produto.data()?.valor || 0)
-        quantidadeDeProdutos += +produtoEstoque.data().quantidade
-        volumeDeProdutos += +produtoEstoque.data().quantidade * (produto.data()?.volume || 0)
+        valorTotalProdutos += Number(produtoEstoque.data().quantidade) * (produto.data()?.valor || 0)
+        quantidadeDeProdutos += Number(produtoEstoque.data().quantidade)
+        volumeDeProdutos += Number(produtoEstoque.data().quantidade) * (produto.data()?.volume || 0)
 
         produtosEstoqueList.push(tabledata)
     }

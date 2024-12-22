@@ -5,7 +5,7 @@ import { 	ptBR } from '@mui/x-data-grid/locales';
 import type {} from "@mui/x-data-grid/themeAugmentation";
 // import CardItem from '../CardItem';
 //import DataManupulationHeader from '../DataManupulationHeader';
-import { DataGrid, GridColDef, GridRowSelectionModel, GridToolbar, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
+import { DataGrid, type GridColDef, type GridRowSelectionModel, GridToolbar, GridToolbarColumnsButton, GridToolbarContainer, GridToolbarDensitySelector, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 import CustomToolbar from './clientes-toolbar';
 
 
@@ -49,9 +49,7 @@ export default function ClientesTable(props: { clientList: ClienteTableData[]}):
     
     <div>
       <Grid item xs={12} alignItems="left"
-        justifyContent="left">
-       
-      </Grid>
+        justifyContent="left" />
       <Box sx={{ width: '100%' }} >
         <DataGrid
          localeText={ptBR.components.MuiDataGrid.defaultProps.localeText}

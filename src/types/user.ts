@@ -1,8 +1,12 @@
 export interface User {
   id?: string;
-  name?: string;
-  avatar?: string;
+  firstName?: string;
+  lastName?:string;
+  profilePic?: string;
   email?: string;
+  telefone?:string;
+  estado?:string
+  cidade?:string
 
   [key: string]: unknown;
 }

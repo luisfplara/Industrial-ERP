@@ -7,9 +7,8 @@ import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 import Link from 'next/link';
 import AdicionarEstoqueDialog from '@/components/dashboard/estoque/estoque-adicionar';
 import { addEstoqueForm, deleteEstoqueForm } from './actions';
-import { EstoqueType, getEstoques } from '@/data/estoque';
+import { type EstoqueType, getEstoques } from '@/data/estoque';
 
-import DeleteDOCDialog from '@/components/dialogs/DeleteProdutoEstoqueDialog';
 import EstoqueGrid from '@/components/dashboard/estoque/estoque-grid';
 
 
@@ -18,7 +17,7 @@ export default async function Clientes() {
 
   const estoqueData = await getEstoques()
 
-  const estoqueList: Array<{ id: string, selected:boolean } & EstoqueType> = []
+  const estoqueList: ({ id: string, selected:boolean } & EstoqueType)[] = []
 
   estoqueData.forEach((data) => {
     estoqueList.push({ id: data.id, selected:false , ...data.data() })

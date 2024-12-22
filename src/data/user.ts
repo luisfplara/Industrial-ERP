@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call -- asd*/
+ 
 
-import {   doc,  deleteDoc,   setDoc,  getDoc, DocumentSnapshot, } from 'firebase/firestore';
+import {   doc,  deleteDoc,   setDoc,  getDoc, type DocumentSnapshot, updateDoc} from 'firebase/firestore';
 import { getCollectionRef } from './helper/FirestoreDataWithType';
-import { User } from '@/types/user';
+import { type User } from '@/types/user';
 
 // Define a generic type for your Firestore documents
 
@@ -20,10 +20,15 @@ export async function deleteUser(userId: string):Promise<void> {
   const userRef = doc(UserCollectionRef, userId)
   return deleteDoc(userRef);
 }
+
+export async function updateUser(userId: string, user: User):Promise<void>{
+  return updateDoc(doc(UserCollectionRef, userId), user);
+}
 const userFirebase = {
   getUser,
   addNewUser,
-  deleteUser
+  deleteUser,
+  updateUser
 }
 
 export default userFirebase;

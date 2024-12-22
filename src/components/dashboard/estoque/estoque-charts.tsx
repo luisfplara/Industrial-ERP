@@ -3,7 +3,7 @@ import CardItem from "../dashbaord-carditem";
 import { Box, Typography } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 
-export function CapacidadeEstoqueChart(props: { pData: string, xLabels: string }) {
+export function CapacidadeEstoqueChart(props: { pData: number[], xLabels: string []}) {
     return (
         <CardItem>
             <Typography variant="h6" gutterBottom align='left'>

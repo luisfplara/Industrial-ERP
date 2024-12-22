@@ -23,11 +23,11 @@ import { authClient } from '@/lib/auth/client';
 import { useUser } from '@/hooks/use-user';
 
 const schema = zod.object({
-  firstName: zod.string().min(1, { message: 'First name is required' }),
-  lastName: zod.string().min(1, { message: 'Last name is required' }),
-  email: zod.string().min(1, { message: 'Email is required' }).email(),
-  password: zod.string().min(6, { message: 'Password should be at least 6 characters' }),
-  terms: zod.boolean().refine((value) => value, 'You must accept the terms and conditions'),
+  firstName: zod.string().min(1, { message: 'Nome é necessário' }),
+  lastName: zod.string().min(1, { message: 'Sobrenome é necessário' }),
+  email: zod.string().min(1, { message: 'Email é necessário' }).email(),
+  password: zod.string().min(6, { message: 'Senha precisa de no minimo 6 caracteres' }),
+  terms: zod.boolean().refine((value) => value, 'Você deve aceitar os termos de uso do sistema!!'),
 });
 
 type Values = zod.infer<typeof schema>;
@@ -55,7 +55,7 @@ export function SignUpForm(): React.JSX.Element {
       const { error } = await authClient.signUp(values);
 
       if (error) {
-        setError('root', { type: 'server', message: error });
+        setError('root', { type: 'server', message: error.message });
         setIsPending(false);
         return;
       }
@@ -73,11 +73,11 @@ export function SignUpForm(): React.JSX.Element {
   return (
     <Stack spacing={3}>
       <Stack spacing={1}>
-        <Typography variant="h4">Sign up</Typography>
+        <Typography variant="h4">Cadastrar</Typography>
         <Typography color="text.secondary" variant="body2">
-          Already have an account?{' '}
+          Já possui uma conta?{' '}
           <Link component={RouterLink} href={paths.auth.signIn} underline="hover" variant="subtitle2">
-            Sign in
+            Entrar
           </Link>
         </Typography>
       </Stack>
@@ -88,7 +88,7 @@ export function SignUpForm(): React.JSX.Element {
             name="firstName"
             render={({ field }) => (
               <FormControl error={Boolean(errors.firstName)}>
-                <InputLabel>First name</InputLabel>
+                <InputLabel>Nome</InputLabel>
                 <OutlinedInput {...field} label="First name" />
                 {errors.firstName ? <FormHelperText>{errors.firstName.message}</FormHelperText> : null}
               </FormControl>
@@ -99,7 +99,7 @@ export function SignUpForm(): React.JSX.Element {
             name="lastName"
             render={({ field }) => (
               <FormControl error={Boolean(errors.firstName)}>
-                <InputLabel>Last name</InputLabel>
+                <InputLabel>Sobrenome</InputLabel>
                 <OutlinedInput {...field} label="Last name" />
                 {errors.firstName ? <FormHelperText>{errors.firstName.message}</FormHelperText> : null}
               </FormControl>
@@ -110,7 +110,7 @@ export function SignUpForm(): React.JSX.Element {
             name="email"
             render={({ field }) => (
               <FormControl error={Boolean(errors.email)}>
-                <InputLabel>Email address</InputLabel>
+                <InputLabel>Email</InputLabel>
                 <OutlinedInput {...field} label="Email address" type="email" />
                 {errors.email ? <FormHelperText>{errors.email.message}</FormHelperText> : null}
               </FormControl>
@@ -121,7 +121,7 @@ export function SignUpForm(): React.JSX.Element {
             name="password"
             render={({ field }) => (
               <FormControl error={Boolean(errors.password)}>
-                <InputLabel>Password</InputLabel>
+                <InputLabel>Senha</InputLabel>
                 <OutlinedInput {...field} label="Password" type="password" />
                 {errors.password ? <FormHelperText>{errors.password.message}</FormHelperText> : null}
               </FormControl>
@@ -136,7 +136,7 @@ export function SignUpForm(): React.JSX.Element {
                   control={<Checkbox {...field} />}
                   label={
                     <React.Fragment>
-                      I have read the <Link>terms and conditions</Link>
+                      Eu li e concordo com os <Link>termos e condições</Link>
                     </React.Fragment>
                   }
                 />
@@ -150,7 +150,6 @@ export function SignUpForm(): React.JSX.Element {
           </Button>
         </Stack>
       </form>
-      <Alert color="warning">Created users are not persisted</Alert>
     </Stack>
   );
 }

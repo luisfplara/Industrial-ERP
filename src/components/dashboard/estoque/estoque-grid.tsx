@@ -4,19 +4,19 @@ import { Box, Card, CardActionArea, CardContent,  Checkbox, Grid, Typography } f
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { EstoqueType } from "@/data/estoque"
+import { type EstoqueType } from "@/data/estoque"
 
 export default function EstoqueGrid(props: { estoqueList: ({ id: string, selected: boolean } & EstoqueType) [] }): React.JSX.Element {
 //setSelectedCards(selectedCards?.set(data.id,true))
     const [selectedCards, setSelectedCards] = useState<string[]>([])
     console.log(selectedCards)
 
-    let  rowSelectionModelParams:string = '';
+    let  rowSelectionModelParams = '';
     
     console.log(selectedCards)
     
     selectedCards.forEach((id)=>{
-      rowSelectionModelParams+='&id='+id
+      rowSelectionModelParams+=`&id=${id}`
     })
     
     return (
@@ -41,7 +41,7 @@ export default function EstoqueGrid(props: { estoqueList: ({ id: string, selecte
                                         }
                                         }} />
 
-                                    <CardActionArea LinkComponent={Link} href={"./estoque/" + data.id}>
+                                    <CardActionArea LinkComponent={Link} href={`./estoque/${  data.id}`}>
                                         <CardContent>
 
                                             <Typography variant="h4" component="div">

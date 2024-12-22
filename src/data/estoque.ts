@@ -1,13 +1,13 @@
-import { getDocs, addDoc, DocumentReference, DocumentData, getDoc, doc, deleteDoc, query, where } from 'firebase/firestore';
+import { getDocs, addDoc, type DocumentReference, type DocumentData, getDoc, doc, deleteDoc, query, where } from 'firebase/firestore';
 import { getCollectionRef } from './helper/FirestoreDataWithType';
 
-export type EstoqueType = {
+export interface EstoqueType {
   name: string,
   capacidade: number,
   localizacao: string,
 }
 
-export type ProdutoEstoqueType = {
+export interface ProdutoEstoqueType {
   produtoId: string,
   estoqueId:string,
   quantidade: number,
@@ -20,7 +20,7 @@ export async function getEstoques() {
   return await getDocs(estoqueCollectionRef)
 }
 
-export async function getOneEstoqueWithReference(id: DocumentReference<EstoqueType, DocumentData>) {
+export async function getOneEstoqueWithReference(id: DocumentReference<EstoqueType>) {
   return await getDoc(id)
 }
 

@@ -2,14 +2,13 @@ import * as React from 'react';
 
 import {Container, Grid, Typography } from '@mui/material';
 
-import ProdutosTable from '@/components/dashboard/produto/produto-table';
+import ProdutosTable, { type ProdutoTableData } from '@/components/dashboard/produto/produto-table';
 import { getProdutos } from '@/data/produto';
 import AddProdutosDialog from '@/components/dashboard/produto/produto-adicionar';
 import { addProdutoForm, deleteProdutoForm } from './actions';
 import Link from 'next/link';
-import DataManupulationHeader from '@/components/DataManupulationHeader';
 import Stack from '@mui/material/Stack';
-import { getVendas } from '@/data/vendas';
+
 import Button from '@mui/material/Button';
 import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Download';
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
@@ -20,7 +19,7 @@ export default async function Produtos() {
 
   const produtosData = await getProdutos()
 
-  const produtosList: Array<ProdutoTableData> = []
+  const produtosList: ProdutoTableData[] = []
 
   produtosData.forEach((data) => {
     produtosList.push({ id: data.id, ...data.data() })

@@ -1,6 +1,6 @@
 'use server'
 
-import { EstoqueType, addEstoque, deleteEstoque } from "@/data/estoque";
+import { type EstoqueType, addEstoque, deleteEstoque } from "@/data/estoque";
 import { revalidatePath } from "next/cache";
 
 export async function addEstoqueForm (formData: FormData){
@@ -11,7 +11,7 @@ export async function addEstoqueForm (formData: FormData){
     const estoquePrototype: EstoqueType = {
       name: formJson.nome,
       localizacao: formJson.localizacao,
-      capacidade: +formJson.capacidade
+      capacidade: Number(formJson.capacidade)
     }
 
     await addEstoque(estoquePrototype);
@@ -25,10 +25,10 @@ export async function addEstoqueForm (formData: FormData){
     const formJson = Object.fromEntries((formData as any).entries());
     console.log(formJson)
   
-    const docs:Array<string> = (formJson.docsIds as string).split(',');
+    const docs:string[] = (formJson.docsIds as string).split(',');
     console.log("docs: ", docs)
 
-    const listPromises:Array<Promise<void>>= []
+    const listPromises:Promise<void>[]= []
 
     docs.forEach((id)=>{
         listPromises.push(deleteEstoque(id))

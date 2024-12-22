@@ -1,7 +1,7 @@
 'use server'
 
 import { ClienteType, addCliente, getClientes } from "@/data/cliente"
-import { EstoqueType, ProdutoEstoqueType, addEstoque, addProdutoEstoque, deleteProdutoEstoque } from "@/data/estoque";
+import { EstoqueType, type ProdutoEstoqueType, addEstoque, addProdutoEstoque, deleteProdutoEstoque } from "@/data/estoque";
 import { getOneProduto, getProdutos } from "@/data/produto";
 import { revalidatePath } from "next/cache";
 
@@ -11,14 +11,14 @@ export async function addProdutoEstoqueForm (estoqueId:string,formData: FormData
     console.log(formJson)
     //const produto = await getOneProduto(formJson.produto)
     const produtoEstoquePrototype: ProdutoEstoqueType = {
-      estoqueId:estoqueId,
+      estoqueId,
       produtoId: formJson.produto,
-      quantidade: +formJson.quantidade,
+      quantidade: Number(formJson.quantidade),
     }
 
     await addProdutoEstoque(produtoEstoquePrototype);
 
-    revalidatePath('/dashboard/administracao/estoque/'+estoqueId);
+    revalidatePath(`/dashboard/administracao/estoque/${estoqueId}`);
 
   }
 
@@ -26,10 +26,10 @@ export async function addProdutoEstoqueForm (estoqueId:string,formData: FormData
 
     const formJson = Object.fromEntries((formData as any).entries());
 
-    const docs:Array<string> = (formJson.docsIds as string).split(',');
+    const docs:string[] = (formJson.docsIds as string).split(',');
     console.log("docs: ", docs)
 
-    const listPromises:Array<Promise<void>>= []
+    const listPromises:Promise<void>[]= []
 
     docs.forEach((id)=>{
         listPromises.push(deleteProdutoEstoque(id))
@@ -38,6 +38,6 @@ export async function addProdutoEstoqueForm (estoqueId:string,formData: FormData
     await Promise.all(listPromises);
 
 
-    revalidatePath('/dashboard/administracao/estoque/'+estoqueId);
+    revalidatePath(`/dashboard/administracao/estoque/${estoqueId}`);
 
   }

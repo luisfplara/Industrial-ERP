@@ -1,16 +1,16 @@
 'use client'
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import * as React from 'react';
-import { ProdutoType } from "@/data/produto";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { type ProdutoType } from "@/data/produto";
+import { useSearchParams , useRouter } from "next/navigation";
+
 
 
 
 
 export default function AddProdutoEstoqueDialog(props: { 
   submitAction: (id:string, event: FormData) => {} ,  
-  produtosList: Array<{ docId: string } & ProdutoType>,
+  produtosList: ({ docId: string } & ProdutoType)[],
   estoqueId:string
 }) {
 

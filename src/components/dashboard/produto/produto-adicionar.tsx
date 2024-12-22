@@ -2,8 +2,8 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from "@mui/material";
 import * as React from 'react';
 
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useSearchParams , useRouter } from "next/navigation";
+
 
 
 
@@ -66,7 +66,7 @@ export default function AddProdutosDialog(props: { submitAction: (event: FormDat
               id="unidade-select"
               name="unidade"
               label="Unidade"
-              defaultValue={'kg'}
+              defaultValue="kg"
             >
               <MenuItem key={1} value='kg'>Kg</MenuItem>
               <MenuItem key={2} value='un'>Un</MenuItem>

@@ -1,7 +1,7 @@
 'use server'
 
 import { ClienteType, addCliente, getClientes } from "@/data/cliente"
-import { ProdutoType, addProduto, deleteProduto } from "@/data/produto";
+import { type ProdutoType, addProduto, deleteProduto } from "@/data/produto";
 import { revalidatePath } from "next/cache";
 
 export async function addProdutoForm(formData: FormData) {
@@ -10,8 +10,8 @@ export async function addProdutoForm(formData: FormData) {
   const projectPrototype: ProdutoType = {
     nome: formJson.nome,
     unidade: formJson.unidade,
-    volume: +formJson.volume,
-    valor: +formJson.valor,
+    volume: Number(formJson.volume),
+    valor: Number(formJson.valor),
   }
   await addProduto(projectPrototype);
 

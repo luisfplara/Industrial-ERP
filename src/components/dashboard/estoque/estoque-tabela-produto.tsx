@@ -1,7 +1,7 @@
 'use client'
 import * as React from 'react';
 
-import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, type GridColDef, type GridRowSelectionModel } from '@mui/x-data-grid';
 import CardItem from '../dashbaord-carditem';
 import { Box, Grid, Typography } from '@mui/material';
 
@@ -62,15 +62,15 @@ export interface ProdutoEstoqueData {
 }
 
 
-export default function ProdutosEstoqueTable(props: { produtoEstoqueList: Array<ProdutoEstoqueData>, estoqueId: string }) {
+export default function ProdutosEstoqueTable(props: { produtoEstoqueList: ProdutoEstoqueData[], estoqueId: string }) {
 
   const [rowSelectionModel, setRowSelectionModel] =
     React.useState<GridRowSelectionModel>([]);
-    var rowSelectionModelParams:string = '';
+    let rowSelectionModelParams = '';
   console.log(rowSelectionModel)
 
   rowSelectionModel.forEach((id)=>{
-    rowSelectionModelParams+='&id='+id
+    rowSelectionModelParams+=`&id=${id}`
   })
   return (
     <div>
@@ -84,9 +84,7 @@ export default function ProdutosEstoqueTable(props: { produtoEstoqueList: Array<
         </Typography>
 
         <Grid item xs={12} alignItems="left"
-          justifyContent="left">
-          
-        </Grid>
+          justifyContent="left" />
         <Box sx={{ width: '100%' }} >
           <DataGrid
             onRowSelectionModelChange={(newRowSelectionModel) => {

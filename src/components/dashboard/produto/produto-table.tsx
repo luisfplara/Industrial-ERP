@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, type GridColDef, type GridRowSelectionModel } from '@mui/x-data-grid';
 import CardItem from '../dashbaord-carditem';
 import { Grid } from '@mui/material';
 
@@ -35,14 +35,14 @@ export interface ProdutoTableData {
 
 
 
-export default function ProdutosTable(props: { produtoList: Array<ProdutoTableData> }) {
+export default function ProdutosTable(props: { produtoList: ProdutoTableData[] }) {
   const [rowSelectionModel, setRowSelectionModel] =
     React.useState<GridRowSelectionModel>([]);
-  var rowSelectionModelParams: string = '';
+  let rowSelectionModelParams = '';
   console.log(rowSelectionModel)
 
   rowSelectionModel.forEach((id) => {
-    rowSelectionModelParams += '&id=' + id
+    rowSelectionModelParams += `&id=${  id}`
   })
 
 

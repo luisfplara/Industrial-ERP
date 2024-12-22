@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-arguments -- ada*/
 import { firestoreInstance } from '@/lib/firebase/firebase-config';
-import { collection, QueryDocumentSnapshot, DocumentData, FirestoreDataConverter } from 'firebase/firestore';
+import { collection, type QueryDocumentSnapshot, type DocumentData, type FirestoreDataConverter } from 'firebase/firestore';
 
 
 const converter = <T extends DocumentData>(): FirestoreDataConverter<T> => ({

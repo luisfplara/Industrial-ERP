@@ -7,28 +7,18 @@ interface FormFieldProps {
     label: string;
     register: UseFormRegister<any>; // Generic type for reusability
     error?: FieldError;
+    readOnly:boolean
 }
 
-const FormField: React.FC<FormFieldProps> = ({ name, label, register, error }) => {
+const FormTextField: React.FC<FormFieldProps> = ({ name, label, register, error, readOnly }) => {
     return (
 
         <FormControl fullWidth>
-            <InputLabel>{label}</InputLabel>
-            <OutlinedInput   {...register(name)}
-                error={Boolean(!!error)}
-                aria-errormessage={error?.message} label="Nome" />
-            {!!error ? <FormHelperText>{error.message}</FormHelperText> : null}
+             <TextField disabled={readOnly} {...register(name)}  label={label} variant="outlined"    error={Boolean(!!error)}/>
+             {!!error ? <FormHelperText>{error.message}</FormHelperText> : null}
         </FormControl>
 
     );
 };
 
-/* <TextField
-      label={label}
-      fullWidth
-      margin="normal"
-      {...register(name)}
-      error={!!error}
-      helperText={error?.message}
-    /> */
-export default FormField;
+export default FormTextField;

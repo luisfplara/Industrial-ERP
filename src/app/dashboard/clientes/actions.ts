@@ -1,44 +1,71 @@
 'use server'
 
-
-import { type ClienteType, addCliente, deleteCliente } from "@/data/cliente";
+import { addCliente, deleteCliente, updateCliente } from "@/data/cliente";
+import type { Cliente } from "@/types/cliente";
 import { revalidatePath } from "next/cache";
 
-export async function addClientForm(formData: FormData):Promise<void> {
-  formData.get
-  const formJson = Object.fromEntries((formData).entries());
-  
-  console.log('formJsonformJson: ',formJson)
-
-  const projectPrototype: ClienteType = {
-    nome: formJson.nome,
-    telefone: 'formJson.telefone',
-    email: 'formJson.email',
-    endereco: 'formJson.endereco',
-  }
-  console.log(projectPrototype)
-
-  await addCliente(projectPrototype);
+export async function addClient(cliente: Cliente):Promise<void> {
+  await addCliente(cliente);
 
   revalidatePath('/dashboard/administracao/clientes');
 
 }
 
-export async function deleteClienteForm(formData: FormData) {
+export async function editClient(oldCliente: Cliente, newCliente: Cliente):Promise<void> {
+  console.log('1233124124 testandooo ');
 
-  const formJson = Object.fromEntries((formData as any).entries());
-  console.log(formJson)
+  const differences: Partial<Cliente> = {};
+  console.log('old ---------> : ', oldCliente);
+  console.log('new ---------> : ', newCliente);
+  for (const key in newCliente) {
+    const typedKey = key as keyof Cliente;
 
-  const docs: string[] = (formJson.docsIds as string).split(',');
-  console.log("docs: ", docs)
+    if (typedKey === "tipoPessoa") {
+      // Explicit check for "tipoPessoa" with strict typing
+      if (oldCliente.tipoPessoa !== newCliente.tipoPessoa) {
+        differences.tipoPessoa = newCliente.tipoPessoa;
+      }
+    } else if (oldCliente[typedKey] !== newCliente[typedKey]) {
+      differences[typedKey] = newCliente[typedKey];
+    }
+  }
 
-  const listPromises: Promise<void>[] = []
+  for (const key in oldCliente  ) {
+    const typedKey = key as keyof Cliente;
 
-  docs.forEach((id) => {
-    listPromises.push(deleteCliente(id))
-  })
+    if (typedKey === "tipoPessoa") {
+      // Explicit check for "tipoPessoa" with strict typing
+      if (oldCliente.tipoPessoa !== newCliente.tipoPessoa) {
+        differences.tipoPessoa = newCliente.tipoPessoa;
+      }
+    } else if (oldCliente[typedKey] !== newCliente[typedKey]) {
+      differences[typedKey] = newCliente[typedKey]||'';
+    }
+  }
 
-  await Promise.all(listPromises);
+  console.log('differencesdifferencesdifferences: ',differences);
+ await updateCliente(oldCliente?.id||'', differences )
+
 
   revalidatePath('/dashboard/administracao/clientes');
+
+}
+
+export async function deleteClienteForm(formData: FormData):Promise<void> {
+
+  // const formJson = Object.fromEntries((formData as any).entries());
+  // console.log(formJson)
+
+  // const docs: string[] = (formJson.docsIds as string).split(',');
+  // console.log("docs: ", docs)
+
+  // const listPromises: Promise<void>[] = []
+
+  // docs.forEach((id) => {
+  //   listPromises.push(deleteCliente(id))
+  // })
+
+  // await Promise.all(listPromises);
+
+  // revalidatePath('/dashboard/administracao/clientes');
 }

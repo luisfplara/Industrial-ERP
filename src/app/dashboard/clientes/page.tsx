@@ -7,58 +7,45 @@ import { Download as DownloadIcon } from '@phosphor-icons/react/dist/ssr/Downloa
 import { Plus as PlusIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 import { Upload as UploadIcon } from '@phosphor-icons/react/dist/ssr/Upload';
 //import dayjs from 'dayjs';
+import { Plus as AddIcon } from '@phosphor-icons/react/dist/ssr/Plus';
 
 import { config } from '@/config';
-import { CustomersFilters } from '@/components/dashboard/customer/customers-filters';
-// import { CustomersTable } from '@/components/dashboard/customer/customers-table';
-//import type { Customer } from '@/components/dashboard/customer/customers-table';
-import ClientesTable, { type ClienteTableData } from '@/components/dashboard/clientes/clientes-table';
+import ClientesTable from '@/components/dashboard/clientes/clientes-table';
 import { getClientes } from '@/data/cliente';
 import AdicionarClienteDialog from '@/components/dashboard/clientes/clientes-adicionar';
-import { addClientForm } from './actions';
+import { addClient, editClient } from './actions';
 import Link from 'next/link';
+import { Cliente } from '@/types/cliente';
+import { Fab } from '@mui/material';
 
 export const metadata = { title: `Customers | Dashboard | ${config.site.name}` } satisfies Metadata;
 
 
 export default async function Page(): Promise<React.JSX.Element> {
-  //const page = 0;
-  //const rowsPerPage = 5;
-
-  //const paginatedCustomers = applyPagination(customers, page, rowsPerPage);
 
   const clienteData = await getClientes()
 
-  const clienteList: ClienteTableData[] = []
+  const clienteList: Cliente[] = []
 
   clienteData.forEach((data) => {
     clienteList.push({ id: data.id, ...data.data() })
-
   })
+
+
   return (
     <Stack spacing={3}>
-      <AdicionarClienteDialog submitAction={addClientForm} />
+      <AdicionarClienteDialog submitAction={addClient} editAction={editClient} />
       <Stack direction="row" spacing={3}>
-        <Stack spacing={1} sx={{ flex: '1 1 auto' }}>
-          <Typography variant="h4">Clientes</Typography>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-            <Button color="inherit" startIcon={<UploadIcon fontSize="var(--icon-fontSize-md)" />}>
-              Import
-            </Button>
-            <Button color="inherit" startIcon={<DownloadIcon fontSize="var(--icon-fontSize-md)" />}>
-              Export
-            </Button>
-          </Stack>
-        </Stack>
-        <div>
-          <Link href='./clientes?addDialog=true'>
+        <Typography variant="h4">Clientes</Typography>
+        <Stack>
+          <Link href='./clientes?showDialog=true'>
             <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
-              Add
+              Novo
             </Button>
           </Link>
-        </div>
+        </Stack>
       </Stack>
-      
+
       <ClientesTable clientList={clienteList} />
     </Stack>
   );

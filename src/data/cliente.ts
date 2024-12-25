@@ -1,15 +1,10 @@
-import { getDocs, addDoc, onSnapshot, doc, getDoc, deleteDoc } from 'firebase/firestore';
+import { getDocs, addDoc, onSnapshot, doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { getCollectionRef } from './helper/FirestoreDataWithType';
+import { Cliente } from '@/types/cliente';
 
 // Define a generic type for your Firestore documents
-export interface ClienteType{
-  nome: string,
-  telefone: string,
-  email: string,
-  endereco: string,
-}
 
-export const ClienteCollectionRef = getCollectionRef<ClienteType>('clientes');
+export const ClienteCollectionRef = getCollectionRef<Cliente>('clientes');
 
 export async function listenerClientes(callback:()=>void) {
   return onSnapshot(ClienteCollectionRef, callback);
@@ -23,8 +18,12 @@ export async function getOneCliente(id:string) {
   return await getDoc(doc(ClienteCollectionRef, id))
 }
 
-export async function addCliente( ClienteData : ClienteType) {
+export async function addCliente( ClienteData : Cliente) {
   return await addDoc(ClienteCollectionRef, ClienteData);
+}
+
+export async function updateCliente( id:string, ClienteData : any) {
+  return await updateDoc(doc(ClienteCollectionRef, id), ClienteData);
 }
 
 export async function deleteCliente(produtoId: string) {

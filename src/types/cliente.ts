@@ -5,8 +5,8 @@ const enderecoSchema = zod.object({
   endereco: zod.string().min(1, { message: 'Endereco é necessário' }),
   numero: zod.string().min(1, { message: 'Numero é necessário' }),
   bairro: zod.string().min(1, { message: 'Bairro é necessário' }),
-  cidade: zod.string().min(1, { message: 'Cidade é necessário' }),
-  estado: zod.string().min(1, { message: 'Cidade é necessário' }),
+  cidade: zod.string().min(1, { message: 'Selecione uma cidade' }),
+  estado: zod.string().min(1, { message: 'Selecione um estado' }),
 });
 
 const generalSchema = zod.object({

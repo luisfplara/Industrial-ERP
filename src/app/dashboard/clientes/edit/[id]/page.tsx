@@ -197,24 +197,27 @@ const FormEndereco = (props: { readOnly: boolean, tipoPessoa: string, register: 
             <Grid item xs={12}>
                 <Typography >Localização</Typography>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
                 <FormTextField type="edit" readOnly={false} name="dadoEndereco.cep" register={props.register} label="CEP" error={props.errors.dadoEndereco?.cep} />
             </Grid>
-            <Grid item xs={6}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.endereco" register={props.register} label="Endereço" error={props.errors.dadoEndereco?.endereco} />
-            </Grid>
-            <Grid item xs={6}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.numero" register={props.register} label="Número" error={props.errors.dadoEndereco?.numero} />
-            </Grid>
-            <Grid item xs={6}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.bairro" register={props.register} label="Bairro" error={props.errors.dadoEndereco?.bairro} />
-            </Grid>
-            <Grid item xs={6}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.cidade" register={props.register} label="Cidade" error={props.errors.dadoEndereco?.cidade} />
-            </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
                 <FormTextField type="edit" readOnly={false} name="dadoEndereco.estado" register={props.register} label="Estado" error={props.errors.dadoEndereco?.estado} />
             </Grid>
+            <Grid item xs={4}>
+                <FormTextField type="edit" readOnly={false} name="dadoEndereco.cidade" register={props.register} label="Cidade" error={props.errors.dadoEndereco?.cidade} />
+            </Grid>
+            <Grid item xs={5}>
+                <FormTextField type="edit" readOnly={false} name="dadoEndereco.bairro" register={props.register} label="Bairro" error={props.errors.dadoEndereco?.bairro} />
+            </Grid>
+            <Grid item xs={5}>
+                <FormTextField type="edit" readOnly={false} name="dadoEndereco.endereco" register={props.register} label="Endereço" error={props.errors.dadoEndereco?.endereco} />
+            </Grid>
+            <Grid item xs={2}>
+                <FormTextField type="edit" readOnly={false} name="dadoEndereco.numero" register={props.register} label="Número" error={props.errors.dadoEndereco?.numero} />
+            </Grid>
+           
+           
+            
         </Grid>
     </>)
 }

@@ -4,7 +4,7 @@ import { addCliente, deleteCliente, updateCliente } from "@/data/cliente";
 import type { Cliente } from "@/types/cliente";
 import { revalidatePath } from "next/cache";
 
-export async function addClient(cliente: Cliente):Promise<void> {
+export async function newClient(cliente: Cliente):Promise<void> {
   await addCliente(cliente);
 
   revalidatePath('/dashboard/administracao/clientes');
@@ -25,7 +25,9 @@ export async function editClient(oldCliente: Cliente, newCliente: Cliente):Promi
       if (oldCliente.tipoPessoa !== newCliente.tipoPessoa) {
         differences.tipoPessoa = newCliente.tipoPessoa;
       }
-    } else if (oldCliente[typedKey] !== newCliente[typedKey]) {
+    } else if (typedKey === "dadoEndereco") {
+      differences[typedKey] = newCliente[typedKey];
+    }else if (oldCliente[typedKey] !== newCliente[typedKey]) {
       differences[typedKey] = newCliente[typedKey];
     }
   }
@@ -38,6 +40,8 @@ export async function editClient(oldCliente: Cliente, newCliente: Cliente):Promi
       if (oldCliente.tipoPessoa !== newCliente.tipoPessoa) {
         differences.tipoPessoa = newCliente.tipoPessoa;
       }
+    }else if (typedKey === "dadoEndereco") {
+      differences[typedKey] = newCliente[typedKey];
     } else if (oldCliente[typedKey] !== newCliente[typedKey]) {
       differences[typedKey] = newCliente[typedKey]||'';
     }
@@ -68,4 +72,19 @@ export async function deleteClienteForm(formData: FormData):Promise<void> {
   // await Promise.all(listPromises);
 
   // revalidatePath('/dashboard/administracao/clientes');
+}
+
+import cidades from "@/data/assets/cidades.json"
+import estado from "@/data/assets/estados.json"
+import { Cidade } from "@/types/cidade";
+import { Estado } from "@/types/estado";
+
+export async function getCidadeList(uf: string):Promise<Cidade[]> {
+  const ufId:Estado[]= estado.filter(
+    function(data){ return data.uf == uf })
+
+  return cidades.filter(
+    function(data){ return data.id == ufId[0]?.id }
+);
+
 }

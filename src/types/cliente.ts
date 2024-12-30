@@ -1,10 +1,19 @@
 import { z as zod } from 'zod';
 
+const enderecoSchema = zod.object({
+  cep: zod.string().min(1, { message: 'CEP é necessário' }),
+  endereco: zod.string().min(1, { message: 'Endereco é necessário' }),
+  numero: zod.string().min(1, { message: 'Numero é necessário' }),
+  bairro: zod.string().min(1, { message: 'Bairro é necessário' }),
+  cidade: zod.string().min(1, { message: 'Cidade é necessário' }),
+  estado: zod.string().min(1, { message: 'Cidade é necessário' }),
+});
+
 const generalSchema = zod.object({
-  id:zod.string().optional(),
+  id: zod.string().optional(),
   telefone: zod.string().regex(/^[1-9]{2}9?[0-9]{8}$/, "Número incorreto"),
   email: zod.string().email("Email fora do padrão"),
-  endereco: zod.string().min(1, { message: 'Endereco é necessário' }),
+  dadoEndereco: enderecoSchema,
 });
 
 // Campos específicos para pessoa física

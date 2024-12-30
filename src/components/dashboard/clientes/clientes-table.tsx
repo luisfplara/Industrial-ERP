@@ -11,13 +11,14 @@ import CustomToolbar from './clientes-toolbar';
 import { Cliente } from '@/types/cliente';
 import { Trash as DeleteIcon } from '@phosphor-icons/react/dist/ssr/Trash';
 import { Eye as ViewIcon } from '@phosphor-icons/react/dist/ssr/Eye';
+import { Pencil as EditIcon } from '@phosphor-icons/react/dist/ssr/Pencil';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 
 //  <DataManupulationHeader addDialogLink={'./clientes?addDialog=true'} deleteDialogLink={'./clientes?deleteDialog=true'+rowSelectionModelParams} />
 
-export default function ClientesTable(props: { clientList: Cliente[]}): React.JSX.Element {
+export default function ClientesTable(props: { clientList: Cliente[] }): React.JSX.Element {
   const apiRef = useGridApiRef();
 
   const columns: GridColDef[] = [
@@ -25,16 +26,26 @@ export default function ClientesTable(props: { clientList: Cliente[]}): React.JS
     { field: 'nome', headerName: 'Nome', flex: 1 },
     { field: 'telefone', headerName: 'telefone', flex: 1 },
     { field: 'email', headerName: 'Email', flex: 1 },
-    { field: 'endereco', headerName: 'Endereco', flex: 1},
-    { field: 'actions', type: 'actions',
+    { field: 'endereco', headerName: 'Endereco', flex: 1 },
+    {
+      field: 'actions', type: 'actions',
       getActions: (params: GridRowParams) => {
         return [
-          <Link href={'./clientes?showDialog=true&id=' + params.id} >
+          <Link href={'./clientes/' + params.id} >
             <GridActionsCellItem
               icon={<ViewIcon size={20} />}
               label="View"
               onClick={() => {
-                console.log('ididididi:--->', params.row)
+                apiRef.current.selectRow(params.id, true, true);
+                apiRef.current.updateRows([params.row]);
+              }}
+            />
+          </Link>,
+          <Link href={'./clientes/edit/' + params.id} >
+            <GridActionsCellItem
+              icon={<EditIcon size={20} />}
+              label="View"
+              onClick={() => {
                 apiRef.current.selectRow(params.id, true, true);
                 apiRef.current.updateRows([params.row]);
               }}

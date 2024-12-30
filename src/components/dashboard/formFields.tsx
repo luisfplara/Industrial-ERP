@@ -1,23 +1,36 @@
 import React from "react";
 import { FormControl, FormHelperText, InputLabel, OutlinedInput, TextField } from "@mui/material";
-import { FieldError, UseFormRegister } from "react-hook-form";
+import { Control, FieldError, UseFormRegister } from "react-hook-form";
+import { string } from "zod";
+import { Cliente } from "@/types/cliente";
 
-interface FormFieldProps {
+export interface FormFieldProps {
+    type: "edit";
     name: string;
     label: string;
     register: UseFormRegister<any>; // Generic type for reusability
     error?: FieldError;
-    readOnly:boolean
+    readOnly: boolean
 }
 
-const FormTextField: React.FC<FormFieldProps> = ({ name, label, register, error, readOnly }) => {
+export interface ReadOnlyFormFieldProps {
+    type: "view";
+    label: string;
+    value: string;
+}
+
+const FormTextField: React.FC<FormFieldProps | ReadOnlyFormFieldProps> = (formFieldProps: FormFieldProps | ReadOnlyFormFieldProps) => {
     return (
-
-        <FormControl fullWidth>
-             <TextField disabled={readOnly} {...register(name)}  label={label} variant="outlined"    error={Boolean(!!error)}/>
-             {!!error ? <FormHelperText>{error.message}</FormHelperText> : null}
-        </FormControl>
-
+        <>
+            {formFieldProps.type == "edit" &&
+                <FormControl fullWidth>
+                    <TextField helperText={formFieldProps.error?.message} disabled={formFieldProps.readOnly} {...formFieldProps.register(formFieldProps.name)} label={formFieldProps.label} variant="outlined" error={Boolean(!!formFieldProps.error)} />
+                </FormControl>}
+            {formFieldProps.type == "view" &&
+                <FormControl fullWidth>
+                    <TextField disabled={true} label={formFieldProps.label}  value={formFieldProps.value} />
+                </FormControl>}
+        </>
     );
 };
 

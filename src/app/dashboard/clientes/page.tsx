@@ -13,7 +13,7 @@ import { config } from '@/config';
 import ClientesTable from '@/components/dashboard/clientes/clientes-table';
 import { getClientes } from '@/data/cliente';
 import AdicionarClienteDialog from '@/components/dashboard/clientes/clientes-adicionar';
-import { addClient, editClient } from './actions';
+
 import Link from 'next/link';
 import { Cliente } from '@/types/cliente';
 import { Fab } from '@mui/material';
@@ -34,11 +34,11 @@ export default async function Page(): Promise<React.JSX.Element> {
 
   return (
     <Stack spacing={3}>
-      <AdicionarClienteDialog submitAction={addClient} editAction={editClient} />
+      
       <Stack direction="row" spacing={3}>
         <Typography variant="h4">Clientes</Typography>
         <Stack>
-          <Link href='./clientes?showDialog=true'>
+          <Link href='./clientes/new'>
             <Button startIcon={<PlusIcon fontSize="var(--icon-fontSize-md)" />} variant="contained">
               Novo
             </Button>

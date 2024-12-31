@@ -18,7 +18,7 @@ export default function Page() {
     const router = useRouter();
     const [cidades, setCidades] = React.useState<Cidade[]>([]);
     const [carregandoCidade, setCarregandoCidade] = React.useState<boolean>(false);
-
+    const [carregandoCep, setCarregandoCep] = React.useState<boolean>(false);
     const {
         register,
         handleSubmit,
@@ -48,27 +48,33 @@ export default function Page() {
 
     const buscarDadosPorCep = async () => {
         console.error("Buscando ceeeep:", watchCep);
+
         if (!/^\d{5}-?\d{3}$/.test(watchCep)) return; // Não faz busca se o CEP for inválido
 
         try {
+            setCarregandoCep(true)
             const response = await fetch(`https://viacep.com.br/ws/${watchCep.replace('-', '')}/json/`);
             const data = await response.json();
             console.error("CEP data:", data);
             if (data.erro) {
                 console.error("CEP não encontrado.");
+                setValue('dadoEndereco.estado', "");
+                setValue('dadoEndereco.cidade', "");
+                setValue('dadoEndereco.bairro', "");
+                setValue('dadoEndereco.endereco', "");
+                setCarregandoCep(false)
                 return;
             }
-            console.log('dadoEndereco.estado', data.uf);
-            console.log('dadoEndereco.cidade', data.ibge);
             setValue('dadoEndereco.estado', data.uf);
             setValue('dadoEndereco.cidade', data.ibge);
             setValue('dadoEndereco.bairro', data.bairro);
             setValue('dadoEndereco.endereco', data.logradouro);
-            errors.dadoEndereco
+            setCarregandoCep(false)
 
         } catch (error) {
             console.error("Erro ao buscar o CEP:", error);
         }
+
     };
 
     React.useEffect(() => {
@@ -88,7 +94,7 @@ export default function Page() {
 
         <FormContato readOnly={false} control={control} errors={errors} register={register} tipoPessoa={tipoPessoa} />
 
-        <FormEndereco buscarDadosPorCep={buscarDadosPorCep} carregandoCidade={carregandoCidade} cidades={cidades} readOnly={false} control={control} errors={errors} register={register} tipoPessoa={tipoPessoa} />
+        <FormEndereco buscarDadosPorCep={buscarDadosPorCep} carregandoCidade={carregandoCidade} carregandoCep={carregandoCep} cidades={cidades} readOnly={false} control={control} errors={errors} register={register} tipoPessoa={tipoPessoa} />
 
         <Stack direction="row" spacing={2}
             sx={{
@@ -187,8 +193,8 @@ const FormContato = (props: { readOnly: boolean, tipoPessoa: string, register: U
     </>)
 }
 
-const FormEndereco = (props: { buscarDadosPorCep: () => Promise<void>, carregandoCidade: boolean, cidades: Cidade[], readOnly: boolean, tipoPessoa: string, register: UseFormRegister<Cliente>, control: Control<Cliente>, errors: FieldErrors<Cliente> }) => {
-
+const FormEndereco = (props: { buscarDadosPorCep: () => Promise<void>, carregandoCidade: boolean, carregandoCep: boolean, cidades: Cidade[], readOnly: boolean, tipoPessoa: string, register: UseFormRegister<Cliente>, control: Control<Cliente>, errors: FieldErrors<Cliente> }) => {
+function aaa(){}
     return (<>
         <Grid container spacing={2} marginTop={1}>
 
@@ -196,115 +202,98 @@ const FormEndereco = (props: { buscarDadosPorCep: () => Promise<void>, carregand
                 <Typography >Localização</Typography>
             </Grid>
             <Grid item xs={4}>
-                <TextField
-                    fullWidth
-                    label="CEP"
-                    variant="outlined"
-                    error={!!props.errors?.dadoEndereco?.cep}
-                    helperText={props.errors?.dadoEndereco?.cep?.message}
-                    {...props.register('dadoEndereco.cep')}
-                    onBlur={async () => await props.buscarDadosPorCep()}
-                />
+
+                <Stack sx={{ alignItems: 'center', justifyContent: 'center', minHeight: '100%' }} spacing={2} direction="row">
+                    <TextField
+                        fullWidth
+                        label="CEP"
+                        variant="outlined"
+                        error={!!props.errors?.dadoEndereco?.cep}
+                        helperText={props.errors?.dadoEndereco?.cep?.message}
+                        {...props.register('dadoEndereco.cep')}
+                        onBlur={async () => await props.buscarDadosPorCep()}
+
+                    />
+                    {props.carregandoCep && <CircularProgress />}
+                </Stack>
             </Grid>
-            <Grid item xs={4}>
-                <Controller
-                    name="dadoEndereco.estado"
-                    control={props.control}
-                    render={({ field }) => (
-                        <TextField
-                            select
-                            fullWidth
-                            label="Estado"
-                            defaultValue=""
-                            error={!!props.errors.dadoEndereco?.estado}
-                            helperText={props.errors?.dadoEndereco?.estado?.message}
-                            {...field}
-                        >
-                            {estados.map((estado) => {
-                                return <MenuItem key={estado.id} value={estado.uf}>{estado.nome}</MenuItem>
-                            })}
-                        </TextField>
-                    )}
-                />
-            </Grid>
-            <Grid item xs={4}>
-                {props.carregandoCidade ? <CircularProgress /> :
+            {!props.carregandoCep && <>
+                <Grid item xs={4}>
                     <Controller
-                        name="dadoEndereco.cidade"
+                        name="dadoEndereco.estado"
                         control={props.control}
                         render={({ field }) => (
                             <TextField
-                                fullWidth
                                 select
-                                label="Cidade"
+                                fullWidth
+                                label="Estado"
                                 defaultValue=""
-                                disabled={props.cidades.length == 0}
-                                error={!!props.errors.dadoEndereco?.cidade}
-                                helperText={props.errors?.dadoEndereco?.cidade?.message}
+                                error={!!props.errors.dadoEndereco?.estado}
+                                helperText={props.errors?.dadoEndereco?.estado?.message}
                                 {...field}
                             >
-                                {props.cidades.map((data) => {
-                                    return <MenuItem key={data.nome} value={data.cod_ibge}>{data.nome}</MenuItem>
+                                {estados.map((estado) => {
+                                    return <MenuItem key={estado.id} value={estado.uf}>{estado.nome}</MenuItem>
                                 })}
                             </TextField>
                         )}
-                    />}
+                    />
+                </Grid>
+                <Grid item xs={4}>
+                    {props.carregandoCidade ? <CircularProgress /> :
+                        <Controller
+                            name="dadoEndereco.cidade"
+                            control={props.control}
+                            render={({ field }) => (
+                                <TextField
+                                    fullWidth
+                                    select
+                                    label="Cidade"
+                                    defaultValue=""
+                                    disabled={props.cidades.length == 0}
+                                    error={!!props.errors.dadoEndereco?.cidade}
+                                    helperText={props.errors?.dadoEndereco?.cidade?.message}
+                                    {...field}
+                                >
+                                    {props.cidades.map((data) => {
+                                        return <MenuItem key={data.nome} value={data.cod_ibge}>{data.nome}</MenuItem>
+                                    })}
+                                </TextField>
+                            )}
+                        />}
 
-            </Grid>
-            <Grid item xs={5}>
-                <Controller
-                    name="dadoEndereco.bairro"
-                    control={props.control}
-                    render={({ field }) => (
-                        <TextField
-                            fullWidth
-                            label="Bairro"
-                            variant="outlined"
-                            error={!!props.errors.dadoEndereco?.bairro}
-                            helperText={props.errors.dadoEndereco?.bairro?.message}
-                            {...field}
-                        />
-                    )}
-                />
-            </Grid>
-            <Grid item xs={5}>
-                <Controller
-                    name="dadoEndereco.endereco"
-                    control={props.control}
-                    render={({ field }) => (
-                        <TextField
-                            fullWidth
-                            label="Endereco"
-                            variant="outlined"
-                            error={!!props.errors.dadoEndereco?.endereco}
-                            helperText={props.errors.dadoEndereco?.endereco?.message}
-                            {...field}
-                        />
-                    )}
-                />
-            </Grid>
-            <Grid item xs={2}>
-                <TextField
-                    fullWidth
-                    label="Número"
-                    variant="outlined"
-                    helperText={props.errors.dadoEndereco?.numero?.message}
-                    error={Boolean(!!props.errors.dadoEndereco?.numero)}
-                    {...props.register("dadoEndereco.numero")}                    
-                />
-            </Grid>
+                </Grid>
+                <Grid item xs={5}>
+                    <TextField
+                        fullWidth
+                        label="Bairro"
+                        variant="outlined"
+                        error={!!props.errors.dadoEndereco?.bairro}
+                        helperText={props.errors.dadoEndereco?.bairro?.message}
+                        {...props.register("dadoEndereco.bairro")}
+                    />
+                </Grid>
+                <Grid item xs={5}>
+                    <TextField
+                        fullWidth
+                        label="Endereco"
+                        variant="outlined"
+                        error={!!props.errors.dadoEndereco?.endereco}
+                        helperText={props.errors.dadoEndereco?.endereco?.message}
+                        {...props.register("dadoEndereco.endereco")}
+                    />
+                </Grid>
+                <Grid item xs={2}>
+                    <TextField
+                        fullWidth
+                        label="Número"
+                        variant="outlined"
+                        helperText={props.errors.dadoEndereco?.numero?.message}
+                        error={Boolean(!!props.errors.dadoEndereco?.numero)}
+                        {...props.register("dadoEndereco.numero")}
+                    />
+                </Grid>
+            </>}
         </Grid>
     </>)
 }
-
-
-
-
-{/* <Select
-label="aaaaaaaaaaaaaa"
-{...props.register('dadoEndereco.cidade')}
->
-<MenuItem value="option1">Option 1</MenuItem>
-<MenuItem value="option2">Option 2</MenuItem>
-</Select>
-<FormHelperText>{props.errors?.dadoEndereco?.cidade?.message}</FormHelperText> */}

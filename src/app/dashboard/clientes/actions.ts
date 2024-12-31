@@ -1,12 +1,11 @@
 'use server'
 
-import { addCliente, deleteCliente, updateCliente } from "@/data/cliente";
+import { addCliente, deleteCliente, updateCliente , getOneCliente} from "@/data/cliente";
 import type { Cliente } from "@/types/cliente";
 import { revalidatePath } from "next/cache";
 
 export async function newClient(cliente: Cliente):Promise<void> {
   await addCliente(cliente);
-
   revalidatePath('/dashboard/administracao/clientes');
 
 }
@@ -78,6 +77,7 @@ import cidades from "@/data/assets/cidades.json"
 import estado from "@/data/assets/estados.json"
 import { Cidade } from "@/types/cidade";
 import { Estado } from "@/types/estado";
+import { DocumentSnapshot } from "firebase/firestore";
 
 export async function getCidadeList(uf: string):Promise<Cidade[]> {
   const ufId:Estado[]= estado.filter(

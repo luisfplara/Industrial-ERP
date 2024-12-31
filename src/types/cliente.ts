@@ -1,13 +1,5 @@
 import { z as zod } from 'zod';
-
-const enderecoSchema = zod.object({
-  cep: zod.string().min(1, { message: 'CEP é necessário' }),
-  endereco: zod.string().min(1, { message: 'Endereco é necessário' }),
-  numero: zod.string().min(1, { message: 'Numero é necessário' }),
-  bairro: zod.string().min(1, { message: 'Bairro é necessário' }),
-  cidade: zod.string().min(1, { message: 'Selecione uma cidade' }),
-  estado: zod.string().min(1, { message: 'Selecione um estado' }),
-});
+import { enderecoSchema } from './endereco';
 
 const generalSchema = zod.object({
   id: zod.string().optional(),

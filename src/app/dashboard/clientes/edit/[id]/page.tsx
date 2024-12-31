@@ -1,107 +1,131 @@
 'use client'
 
-import { getOneCliente } from "@/data/cliente";
+import { getOneCliente, updateCliente } from "@/data/cliente";
 import { Cliente, clienteSchema } from "@/types/cliente";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, CircularProgress, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Typography } from "@mui/material"
+import { Button, CircularProgress, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Radio, RadioGroup, Select, TextField, Typography } from "@mui/material"
 import { DocumentSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { Control, Controller, FieldErrors, useForm, UseFormRegister } from "react-hook-form";
-import { editClient } from "../../actions";
+import { newClient, getCidadeList } from "../../actions";
 import { Stack } from "@mui/system";
 import FormTextField from "@/components/dashboard/formFields";
-
+import estados from "@/data/assets/estados.json"
+import { Cidade } from "@/types/cidade";
 export default function Page({
     params,
 }: {
     params: { id: string }
 }) {
-    //const slug = (await params).id
+
     const id = params.id
-    const [cliente, setCliente] = React.useState<Cliente>();
     const router = useRouter();
-    const [isLoadingCliente, setIsLoadingCliente] = React.useState<boolean>(false);
+    const [cidades, setCidades] = React.useState<Cidade[]>([]);
+    const [carregandoCidade, setCarregandoCidade] = React.useState<boolean>(false);
+    const [cliente, setCliente] = React.useState<Cliente>();
+    const [carregandoCliente, setCarregandoCliente] = React.useState<boolean>(false);
     const {
         register,
         handleSubmit,
         watch,
         control,
         formState: { errors },
-        setError,
+        setValue,
         reset
     } = useForm<Cliente>({
-        resolver: zodResolver(clienteSchema), defaultValues: {
-            tipoPessoa: "fisica"
-        }
+        resolver: zodResolver(clienteSchema)
     });
+
     console.log("erros:", errors);
+
     let tipoPessoa = watch("tipoPessoa");
-    React.useEffect(() => {
-        if (id != null) {
-            setIsLoadingCliente(true);
+    let estado = watch("dadoEndereco.estado");
+    let watchCep = watch('dadoEndereco.cep');
 
-            getOneCliente(id).then((clienteDoc: DocumentSnapshot<Cliente>) => {
-                console.log('clienteDoc.data(): ', clienteDoc.data());
-                reset(Object.assign({ id: clienteDoc.id }, clienteDoc.data()));
-                setCliente(Object.assign({ id: clienteDoc.id }, clienteDoc.data()));
-                setIsLoadingCliente(false);
-            });
-        } else {
+    const SubmitNewCliente = (newCliente: Cliente) => {
+        console.log('newClientenewClientenewCliente: ', newCliente);
+        newClient(newCliente);
+    };
 
-            reset({
-                tipoPessoa: "fisica"
-            })
-        }
-    }, [id]);
+    const buscarDadosPorCep = async () => {
+        console.error("Buscando ceeeep:", watchCep);
+        if (!/^\d{5}-?\d{3}$/.test(watchCep)) return; // Não faz busca se o CEP for inválido
 
-    const SubmitEditCliente = (values: any) => {
-        console.log('valuesvaluesvalues: ', values);
-        if (cliente != null) {
-            editClient(cliente, values);
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${watchCep.replace('-', '')}/json/`);
+            const data = await response.json();
+            console.error("CEP data:", data);
+            if (data.erro) {
+                console.error("CEP não encontrado.");
+                return;
+            }
+            console.log('dadoEndereco.estado', data.uf);
+            console.log('dadoEndereco.cidade', data.ibge);
+            setValue('dadoEndereco.estado', data.uf);
+            setValue('dadoEndereco.cidade', data.ibge);
+            setValue('dadoEndereco.bairro', data.bairro);
+            setValue('dadoEndereco.endereco', data.logradouro);
+            errors.dadoEndereco
+
+        } catch (error) {
+            console.error("Erro ao buscar o CEP:", error);
         }
     };
 
-    //   const SubmitEditCliente = React.useCallback(
-    //     (values: Cliente) => {
-    //         console.log('valuesvaluesvalues: ', values);
-    //         if (cliente != null) {
-    //             editClient(cliente, values);
-    //         }
-    //     },
-    //     [setError]
-    //   );
+    React.useEffect(() => {
+        console.log("estado->:", estado);
+        setCarregandoCidade(true);
+        getCidadeList(estado).then((data) => {
+            setCarregandoCidade(false);
+            console.log("cidades->:", cidades);
+            setCidades(data)
+        });
+    }, [estado])
 
-    return <form onSubmit={handleSubmit(SubmitEditCliente)}>
-        <Typography variant="h2">Editar Cliente</Typography>
+    React.useEffect(() => {
 
-        {isLoadingCliente? <CircularProgress />:<EditClienteForm control={control} errors={errors} register={register} tipoPessoa={tipoPessoa} />}
+        setCarregandoCliente(true);
+        console.log("idid-->:", id);
+        getOneCliente(id).then((clienteDoc) => {
+            console.log("clienteDoc-->:", clienteDoc);
+            const cliente = Object.assign({ id: clienteDoc.id }, clienteDoc.data()) as Cliente;
+            console.log("cleinte data->:", cliente);
+            reset(cliente);
+            // setValue('',cliente);
+            // setValueCLiente(cliente)
+            setCarregandoCliente(false);
 
-        <Stack direction="row" spacing={2}
-            sx={{
-                justifyContent: "end",
-                alignItems: "center",
-                marginTop: 2
-            }}>
-            <Button variant="outlined" onClick={() => { router.back(); }}>Cancel</Button>
-            <Button variant="contained" type="submit">Salvar</Button>
-        </Stack>
+        });
+    }, [id])
 
+    function setValueCLiente(cliente: Cliente) {
+        if (cliente.tipoPessoa == "fisica") {
+            setValue('cpf', cliente.nome);
+        }
+
+    }
+
+    return <form onSubmit={handleSubmit(SubmitNewCliente)}>
+        <Typography variant="h2">Novo Cliente</Typography>
+        {carregandoCliente ? <CircularProgress /> : <>
+            <FormDadosPessoa readOnly={false} control={control} errors={errors} register={register} tipoPessoa={tipoPessoa} />
+
+            <FormContato readOnly={false} control={control} errors={errors} register={register} tipoPessoa={tipoPessoa} />
+
+            <FormEndereco buscarDadosPorCep={buscarDadosPorCep} carregandoCidade={carregandoCidade} cidades={cidades} readOnly={false} control={control} errors={errors} register={register} tipoPessoa={tipoPessoa} />
+
+            <Stack direction="row" spacing={2}
+                sx={{
+                    justifyContent: "end",
+                    alignItems: "center",
+                    marginTop: 2
+                }}>
+                <Button variant="outlined" onClick={() => { router.back(); }}>Cancel</Button>
+                <Button variant="contained" type="submit">Salvar</Button>
+            </Stack>
+        </>}
     </form>
-}
-
-
-const EditClienteForm = (props: { tipoPessoa: string, register: UseFormRegister<Cliente>, control: Control<Cliente>, errors: FieldErrors<Cliente> }): React.JSX.Element => {
-    return (
-        <>
-            <FormDadosPessoa readOnly={false} control={props.control} errors={props.errors} register={props.register} tipoPessoa={props.tipoPessoa} />
-
-            <FormContato readOnly={false} control={props.control} errors={props.errors} register={props.register} tipoPessoa={props.tipoPessoa} />
-
-            <FormEndereco readOnly={false} control={props.control} errors={props.errors} register={props.register} tipoPessoa={props.tipoPessoa} />
-        </>
-
-    )
 }
 
 const FormDadosPessoa = (props: { readOnly: boolean, tipoPessoa: string, register: UseFormRegister<Cliente>, control: Control<Cliente>, errors: FieldErrors<Cliente> }) => {
@@ -180,7 +204,8 @@ const FormContato = (props: { readOnly: boolean, tipoPessoa: string, register: U
                 <Typography >Contato</Typography>
             </Grid>
             <Grid item xs={6}>
-                <FormTextField type="edit" readOnly={false} name="email" register={props.register} label="Email" error={props.errors.email} />
+                <FormTextField type="edit" readOnly={false} name="telefone" register={props.register} label="Telefone" error={props.errors.telefone} />
+
             </Grid>
             <Grid item xs={6}>
                 <FormTextField type="edit" readOnly={false} name="telefone" register={props.register} label="Telefone" error={props.errors.telefone} />
@@ -189,7 +214,7 @@ const FormContato = (props: { readOnly: boolean, tipoPessoa: string, register: U
     </>)
 }
 
-const FormEndereco = (props: { readOnly: boolean, tipoPessoa: string, register: UseFormRegister<Cliente>, control: Control<Cliente>, errors: FieldErrors<Cliente> }) => {
+const FormEndereco = (props: { buscarDadosPorCep: () => Promise<void>, carregandoCidade: boolean, cidades: Cidade[], readOnly: boolean, tipoPessoa: string, register: UseFormRegister<Cliente>, control: Control<Cliente>, errors: FieldErrors<Cliente> }) => {
 
     return (<>
         <Grid container spacing={2} marginTop={1}>
@@ -198,26 +223,103 @@ const FormEndereco = (props: { readOnly: boolean, tipoPessoa: string, register: 
                 <Typography >Localização</Typography>
             </Grid>
             <Grid item xs={4}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.cep" register={props.register} label="CEP" error={props.errors.dadoEndereco?.cep} />
+                <TextField
+                    fullWidth
+                    label="CEP"
+                    variant="outlined"
+                    error={!!props.errors?.dadoEndereco?.cep}
+                    helperText={props.errors?.dadoEndereco?.cep?.message}
+                    {...props.register("dadoEndereco.cep")}
+                    onBlur={async () => await props.buscarDadosPorCep()}
+                />
             </Grid>
             <Grid item xs={4}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.estado" register={props.register} label="Estado" error={props.errors.dadoEndereco?.estado} />
+                <Controller
+                    name="dadoEndereco.estado"
+                    control={props.control}
+                    render={({ field }) => (
+                        <TextField
+                            select
+                            fullWidth
+                            label="Estado"
+                            defaultValue=""
+                            error={!!props.errors.dadoEndereco?.estado}
+                            helperText={props.errors?.dadoEndereco?.estado?.message}
+                            {...field}
+                        >
+                            {estados.map((estado) => {
+                                return <MenuItem key={estado.id} value={estado.uf}>{estado.nome}</MenuItem>
+                            })}
+                        </TextField>
+                    )}
+                />
             </Grid>
             <Grid item xs={4}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.cidade" register={props.register} label="Cidade" error={props.errors.dadoEndereco?.cidade} />
+                {props.carregandoCidade ? <CircularProgress /> :
+                    <Controller
+                        name="dadoEndereco.cidade"
+                        control={props.control}
+                        render={({ field }) => (
+                            <TextField
+                                fullWidth
+                                select
+                                label="Cidade"
+                                defaultValue=""
+                                disabled={props.cidades.length == 0}
+                                error={!!props.errors.dadoEndereco?.cidade}
+                                helperText={props.errors?.dadoEndereco?.cidade?.message}
+                                {...field}
+                            >
+                                {props.cidades.map((data) => {
+                                    return <MenuItem key={data.nome} value={data.cod_ibge}>{data.nome}</MenuItem>
+                                })}
+                            </TextField>
+                        )}
+                    />}
+
             </Grid>
             <Grid item xs={5}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.bairro" register={props.register} label="Bairro" error={props.errors.dadoEndereco?.bairro} />
+                <TextField
+                    fullWidth
+                    label="Bairro"
+                    variant="outlined"
+                    error={!!props.errors.dadoEndereco?.bairro}
+                    helperText={props.errors.dadoEndereco?.bairro?.message}
+                    {...props.register("dadoEndereco.bairro")}
+                />
             </Grid>
             <Grid item xs={5}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.endereco" register={props.register} label="Endereço" error={props.errors.dadoEndereco?.endereco} />
+                <TextField
+                    fullWidth
+                    label="Endereco"
+                    variant="outlined"
+                    error={!!props.errors.dadoEndereco?.endereco}
+                    helperText={props.errors.dadoEndereco?.endereco?.message}
+                    {...props.register("dadoEndereco.endereco")}
+                />
             </Grid>
             <Grid item xs={2}>
-                <FormTextField type="edit" readOnly={false} name="dadoEndereco.numero" register={props.register} label="Número" error={props.errors.dadoEndereco?.numero} />
+                <TextField
+                    fullWidth
+                    label="Número"
+                    variant="outlined"
+                    helperText={props.errors.dadoEndereco?.numero?.message}
+                    error={Boolean(!!props.errors.dadoEndereco?.numero)}
+                    {...props.register('dadoEndereco.numero')}
+                />
             </Grid>
-           
-           
-            
         </Grid>
     </>)
 }
+
+
+
+
+{/* <Select
+label="aaaaaaaaaaaaaa"
+{...props.register('dadoEndereco.cidade')}
+>
+<MenuItem value="option1">Option 1</MenuItem>
+<MenuItem value="option2">Option 2</MenuItem>
+</Select>
+<FormHelperText>{props.errors?.dadoEndereco?.cidade?.message}</FormHelperText> */}

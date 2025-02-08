@@ -39,6 +39,7 @@ export const PessoaForm = ({ isReadOnly }: { isReadOnly?: boolean }) => {
       <Grid item xs={12}>
         {tipo === 'fisica' && (
           <Grid container spacing={2}>
+
             <Grid item xs={12}>
               <Controller disabled={isReadOnly} name="nome" control={control} render={({ field }) => <TextField fullWidth {...field} label="Nome" error={!!(errors as any).nome} helperText={(errors as any).nome?.message} />} />
             </Grid>

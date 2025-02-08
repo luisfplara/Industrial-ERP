@@ -1,5 +1,5 @@
 'use client'
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useFormState } from 'react-hook-form';
 import { PessoaForm } from './pessoaForm';
 import { ContatoForm } from './contatoForm';
 import { LocalizacaoForm } from './enderecoForm';
@@ -18,19 +18,34 @@ const useClienteForm = (defaultValues?: Partial<Cliente>) => {
   });
 };
 
-export const ClienteForm = ({ defaultValues, onSubmit, openMode }: { defaultValues?: Partial<Cliente>, onSubmit: (data: Cliente) => void, openMode: "new" | "view" | "edit" }) => {
+
+export const ClienteForm = ({ defaultValues, editClientSA, newClientSA, openMode }: { defaultValues?: Partial<Cliente> | undefined, editClientSA: (changedValues: Partial<Cliente>) => void, newClientSA: (cliente: Cliente) => void, openMode: "new" | "view" | "edit" }) => {
   const methods = useClienteForm(defaultValues);
   const router = useRouter();
 
+  const { dirtyFields } = useFormState({
+    control: methods.control
+  });
+
   const [mode, setMode] = useState<"new" | "view" | "edit">(openMode);
   console.log("openMode: ", mode);
+
+  function editCliente(cliente: Cliente) {
+    editClientSA(cliente);
+  }
+
+  function newCliente(cliente: Cliente) {
+    newClientSA(cliente);
+  }
+
   return (
 
     <FormProvider {...methods}>
       {mode == "new" && <Typography variant="h2">Novo Cliente</Typography>}
       {mode == "view" && <Typography variant="h2">Vizualizar Cliente</Typography>}
       {mode == "edit" && <Typography variant="h2">Editar Cliente</Typography>}
-      <form onSubmit={methods.handleSubmit(onSubmit)}>
+
+      <form onSubmit={methods.handleSubmit(mode == "edit" ? editCliente : newCliente)}>
         <PessoaForm isReadOnly={mode == "view"} />
         <ContatoForm isReadOnly={mode == "view"} />
         <LocalizacaoForm isReadOnly={mode == "view"} />

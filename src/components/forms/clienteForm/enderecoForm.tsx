@@ -105,7 +105,7 @@ export const LocalizacaoForm = ({ isReadOnly }: { isReadOnly?: boolean }) => {
           />
         </Grid>
         <Grid item xs={4}>
-          {carregandoCidade ? <CircularProgress /> :
+          {carregandoCidade&&estado!=undefined ? <CircularProgress /> :
             <Controller
               disabled={isReadOnly}
               name="dadoEndereco.cidade"

@@ -9,6 +9,7 @@ export const paths = {
     settings: '/dashboard/settings',
     clientes: '/dashboard/clientes',
     estoque: '/dashboard/estoque',
+    invetario: '/dashboard/invetario',
     processamento: '/dashboard/processamento',
     produto: '/dashboard/produto',
     materia_prima: '/dashboard/materia-prima',

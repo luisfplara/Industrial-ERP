@@ -3,6 +3,7 @@ import { enderecoSchema } from './endereco';
 
 const generalSchema = zod.object({
   id: zod.string().optional(),
+  displayName: zod.string().optional(),
   telefone: zod.string().regex(/^[1-9]{2}9?[0-9]{8}$/, "Número incorreto"),
   email: zod.string().email("Email fora do padrão"),
   dadoEndereco: enderecoSchema,
@@ -25,6 +26,9 @@ const juridicaSchema = zod.object({
   razaoSocial: zod.string().min(1, "Razão Social é obrigatória"),
 }).merge(generalSchema);
 
-export const clienteSchema = zod.discriminatedUnion("tipoPessoa", [fisicaSchema, juridicaSchema])
+export const clienteSchema = zod.discriminatedUnion("tipoPessoa", [fisicaSchema, juridicaSchema]).transform((data) => ({
+  ...data,
+  displayName: `${data.tipoPessoa=="fisica"?data.nome: data.nomeFantasia}`,
+}))
 
 export type Cliente = zod.infer<typeof clienteSchema>;
